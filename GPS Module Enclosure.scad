@@ -1,3 +1,5 @@
+include <StudModules.scad>
+
 $fn=100;
 
 tol=0.05; // used for CSG subtraction/addition
@@ -29,7 +31,7 @@ usb_hole_gap=0.3;
 usb_big_hole_radius=usb_radius + 2;
 usb_big_hole_offset=0.8;
 
-enclosure_thickness=2;
+enclosure_thickness=2.5;
 enclosure_gap_to_pcb=1;
 enclosure_radius_inner=pcb_radius+enclosure_gap_to_pcb;
 enclosure_radius_outer=enclosure_radius_inner+enclosure_thickness;
@@ -82,15 +84,15 @@ module pcb() {
         for(i=[-1,1])
             for(j=[-1,1])
                 translate([i*center_hole_width/2,j*center_hole_length/2,0])
-                    cylinder(h = height + tol, r = hole_radius, center=true);
+                    cylinder(h = gps_height + tol, r = hole_radius, center=true);
     }
 }
 
 module board() {
-    translate([0,0,(real_height/2)-height_below_pcb])
-        cube([10, 20, real_height], center = true);
+    translate([0,0,(gps_height/2)-height_below_pcb])
+        cube([10, 20, gps_height], center = true);
     pcb();
-    translate([-usb_offset,-(length/2)+(usb_length/2)-usb_overhang,pcb_thickness+(usb_height/2)])
+    translate([-usb_offset,-(gps_length/2)+(usb_length/2)-usb_overhang,pcb_thickness+(usb_height/2)])
         usb();
 }
 
@@ -131,12 +133,15 @@ module enclosure() {
         usb_hole();
         antenna_hole();
     };
+    for(i=[-1,1])
+        for(j=[-1,1])
+            m3_short_stud(i*center_hole_width/2,j*center_hole_length/2,0,off=-4.63);
 }
 
-//color([0.5,0.5,0.5,1]) board();
+//color([0.5,0.5,0.5,0.5]) board();
 difference() {
 /*color([0.5,0.5,0,0.5])*/ enclosure();
 //translate([0,-30,-10]) cube([100,100,100]); // Cut off side
-translate([-30,-30,enclosure_inside_height - enclosure_inside_height_down - tol]) cube([100,100,100]); // Cut off top
-translate([-30,-gps_length/2,-30]) cube([100,100,100]); // Only leave ports
+translate([-30,-30,enclosure_inside_height - enclosure_inside_height_down - tol - 14]) cube([100,100,100]); // Cut off top
+//translate([-30,-gps_length/2,-30]) cube([100,100,100]); // Only leave ports
 }
