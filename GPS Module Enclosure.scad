@@ -1,6 +1,6 @@
 $fn=100;
 
-tol=0.05; // used for CSG subtraction/addition
+epsilon=0.05; // used for CSG subtraction/addition
 
 pcb_thickness=1.6;
 height_below_pcb=1.4; // 1.32
@@ -86,7 +86,7 @@ module pcb() {
         for(i=[-1,1])
             for(j=[-1,1])
                 translate([i*center_hole_width/2,j*center_hole_length/2,0])
-                    cylinder(h = gps_height + tol, r = hole_radius, center=true);
+                    cylinder(h = gps_height + epsilon, r = hole_radius, center=true);
     }
 }
 
@@ -136,7 +136,7 @@ module antenna_hex_hole() {
 module antenna_hole() {
     translate([0, -(gps_length/2 + enclosure_gap_to_pcb + antenna_big_hole_offset), 0])
     {
-        translate([0, tol, pcb_thickness+usb_height+antenna_clearance+antenna_radius])
+        translate([0, epsilon, pcb_thickness+usb_height+antenna_clearance+antenna_radius])
             rotate(90, v = [1, 0, 0])
                 linear_extrude(height = 10)
                     circle(r = antenna_radius + antenna_hole_gap);
@@ -224,6 +224,6 @@ module enclosure() {
 difference() {
 /*color([0.5,0.5,0,0.5])*/ enclosure();
 //translate([0,-30,-10]) cube([100,100,100]); // Cut off side
-translate([-30, -30, enclosure_inside_height - enclosure_inside_height_down - tol /*- 14*/]) cube(100); // Cut off top
+translate([-30, -30, enclosure_inside_height - enclosure_inside_height_down - epsilon /*- 14*/]) cube(100); // Cut off top
 //translate([-30,-gps_length/2,-30]) cube([100,100,100]); // Only leave ports
 }
