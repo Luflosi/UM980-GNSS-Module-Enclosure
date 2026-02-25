@@ -1,5 +1,3 @@
-include <StudModules.scad>
-
 $fn=100;
 
 tol=0.05; // used for CSG subtraction/addition
@@ -29,7 +27,7 @@ usb_overhang=1.45;
 usb_offset=0.5;
 usb_hole_gap=0.3;
 usb_big_hole_radius=usb_radius + 2;
-usb_big_hole_offset=0.8;
+usb_big_hole_offset=0.9;
 
 enclosure_thickness=2.5;
 enclosure_gap_to_pcb=1;
@@ -37,12 +35,16 @@ enclosure_radius_inner=pcb_radius+enclosure_gap_to_pcb;
 enclosure_radius_outer=enclosure_radius_inner+enclosure_thickness;
 antenna_diameter=5.2;
 antenna_radius=antenna_diameter/2;
-antenna_clearance=3; // space around the antenna connector
+antenna_hole_gap=0.2;
+antenna_clearance=3; // Space around the antenna connector not occupied by the USB-C connector or the enclosure
+antenna_hex_diameter=antenna_diameter + 1; // TODO: actually measure
+antenna_hex_radius=antenna_hex_diameter/2;
+antenna_hex_length=5;
+antenna_big_hole_offset=0.5;
 
 enclosure_inside_height_down=enclosure_gap_to_pcb + height_below_pcb;
 enclosure_inside_height_up=pcb_thickness + usb_hole_gap + usb_height + usb_hole_gap + antenna_clearance + antenna_diameter + antenna_clearance;
 enclosure_inside_height= enclosure_inside_height_up + enclosure_inside_height_down;
-
 
 
 
@@ -112,36 +114,116 @@ module enclosure_outer() {
         linear_extrude(height = enclosure_inside_height + (/*enclosure_gap_to_pcb +*/ enclosure_thickness)*2)
             rounded_rectangle_centered(enclosure_radius_outer);
 }
-
+module enclosure_shell() {
+    difference() {
+        enclosure_outer();
+        enclosure_inner();
+    }
+}
 module usb_hole() {
     translate([-usb_offset,-gps_length/2,pcb_thickness+(usb_height/2)])
         usb(r = usb_radius + usb_hole_gap);
     translate([-usb_offset,-gps_length/2 - (usb_length/2 + enclosure_gap_to_pcb + usb_big_hole_offset),pcb_thickness+(usb_height/2)])
         usb(r = usb_big_hole_radius);
 }
+module antenna_hex_hole() {
+    hex_radius = (antenna_hex_radius + antenna_hole_gap) / cos(180 / 6);
+    rotate(90, v = [1, 0, 0])
+        rotate(30, v = [0, 0, 1])
+            linear_extrude(height = antenna_hex_length)
+                circle(r=hex_radius, $fn=6);
+}
 module antenna_hole() {
-    translate([0,-15, pcb_thickness+usb_height+antenna_clearance+antenna_radius])
-        rotate(90, v = [1, 0, 0])
-            linear_extrude(height = 10)
-                circle(r = antenna_radius);
+    translate([0, -(gps_length/2 + enclosure_gap_to_pcb + antenna_big_hole_offset), 0])
+    {
+        translate([0, tol, pcb_thickness+usb_height+antenna_clearance+antenna_radius])
+            rotate(90, v = [1, 0, 0])
+                linear_extrude(height = 10)
+                    circle(r = antenna_radius + antenna_hole_gap);
+        translate([0, antenna_hex_length, pcb_thickness+usb_height+antenna_clearance+antenna_radius])
+            antenna_hex_hole();
+    }
+}
+// m3 short stud
+module stud_outer(x,y,off=-4.63) {
+    maxid = 5.59; //Maximum Insert Diameter
+    ted = 5.16; //Tapered End Diameter
+    oil = 3.81; //Overal Insert Length
+    rmwt = maxid*0.53; //Recommended Min Wall Thickness
+    ahd = 0.76; //Added Hole Depth for Blind Holes
+    cham = 0.5; //Chamfer at top of stud
+    stud_top = maxid+(rmwt*2); //Top of Stud Diameter
+    stud_bot = stud_top+(cham*2); //Bottom of Stud Diameter
+    st_h = oil+ahd; // Overall stud height
+    st_base = st_h-cham; //Height of Stud to chamfer
+
+    union() {
+        translate([x,y,off]) cylinder(d=stud_bot,st_base);
+        translate([x,y,st_base+off]) cylinder(d1=stud_bot,d2=stud_top,cham);
+    }
+}
+module stud_inner(x,y,off=-4.63) {
+    oil = 3.81; //Overal Insert Length
+    ophs = 5.05; //Optimum Pilot Hole Size
+    oshd = 5.23; //Optimum Surface Hole Diameter
+    ahd = 0.76; //Added Hole Depth for Blind Holes
+    th = 0.64; //Height of 8° Taper
+    st_h = oil+ahd; // Overall stud height
+
+    #union() {
+        translate([x,y,off]) cylinder(d=ophs,oil+ahd);
+        translate([x,y,st_h-th+off]) cylinder(d1=ophs,d2=oshd,th);
+    }
+}
+module antenna_solder_cutout() {
+    cube_size = 10;
+    offset=2;
+    translate([center_hole_width/2 - cube_size - offset,-center_hole_length/2 + offset, -cube_size]) cube(cube_size);
+}
+module studs_outer() {
+    for(i=[-1,1])
+        stud_outer(i*center_hole_width/2,center_hole_length/2);
+    difference() {
+        stud_outer(center_hole_width/2,-1*center_hole_length/2);
+        antenna_solder_cutout();
+    }
+    stud_outer(-1*center_hole_width/2,-1*center_hole_length/2);
+}
+module studs_inner() {
+    for(i=[-1,1])
+        for(j=[-1,1])
+            stud_inner(i*center_hole_width/2,j*center_hole_length/2);
+}
+
+module clamps() {
+    radius = 1;
+    length = 5;
+    height = 14;
+    offset = center_hole_width / 2 + enclosure_radius_inner - radius / 2;
+    for(i=[-1,1])
+        hull() {
+            for(j=[-1,1])
+                translate([i*offset, j*length/2, height])
+                    sphere(r = radius);
+        };
 }
 
 module enclosure() {
     difference() {
-        enclosure_outer();
-        enclosure_inner();
+        union() {
+            enclosure_shell();
+            studs_outer();
+        }
         usb_hole();
         antenna_hole();
+        studs_inner();
+        clamps();
     };
-    for(i=[-1,1])
-        for(j=[-1,1])
-            m3_short_stud(i*center_hole_width/2,j*center_hole_length/2,0,off=-4.63);
 }
-
 //color([0.5,0.5,0.5,0.5]) board();
 difference() {
 /*color([0.5,0.5,0,0.5])*/ enclosure();
 //translate([0,-30,-10]) cube([100,100,100]); // Cut off side
-translate([-30,-30,enclosure_inside_height - enclosure_inside_height_down - tol - 14]) cube([100,100,100]); // Cut off top
+translate([-30, -30, enclosure_inside_height - enclosure_inside_height_down - tol /*- 14*/]) cube(100); // Cut off top
 //translate([-30,-gps_length/2,-30]) cube([100,100,100]); // Only leave ports
 }
