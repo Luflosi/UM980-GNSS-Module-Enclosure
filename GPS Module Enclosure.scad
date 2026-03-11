@@ -1,3 +1,11 @@
+// Future improvements:
+// - Make the antenna hole a slightly larger to make it actually fit
+// - Raise the standoffs compared to the bottom so that there are more than two layers of plastic between the threaded insert and the bottom
+// - Increase the distance between the antenna hole and the USB port slightly so they don't touch when the antenna is rotated in a certain way and so that the antenna connector from the GNSS can rotate more freely
+// - Make the square standoff cutout even larger
+// - Make the antenna hex cutout slightly larger and deeper
+// - Use four indents for the lid instead of two?
+
 $fn=100;
 
 epsilon=0.05; // used for CSG subtraction/addition
