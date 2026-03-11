@@ -10,6 +10,8 @@ $fn=100;
 
 epsilon=0.05; // used for CSG subtraction/addition
 
+tolerance=0.2;
+
 pcb_thickness=1.6;
 height_below_pcb=1.4; // 1.32
 hole_diameter=3;
@@ -53,6 +55,13 @@ antenna_big_hole_offset=0.5;
 enclosure_inside_height_down=enclosure_gap_to_pcb + height_below_pcb;
 enclosure_inside_height_up=pcb_thickness + usb_hole_gap + usb_height + usb_hole_gap + antenna_clearance + antenna_diameter + antenna_clearance;
 enclosure_inside_height= enclosure_inside_height_up + enclosure_inside_height_down;
+
+clamp_radius = 1;
+clamp_offset = center_hole_width / 2 + enclosure_radius_inner - clamp_radius / 2;
+clamp_length = 5;
+
+lid_display_offset=50;
+lid_ridge_step_height = 1;
 
 
 
@@ -204,15 +213,12 @@ module studs_inner() {
 }
 
 module clamps() {
-    radius = 1;
-    length = 5;
     height = 14;
-    offset = center_hole_width / 2 + enclosure_radius_inner - radius / 2;
     for(i=[-1,1])
         hull() {
             for(j=[-1,1])
-                translate([i*offset, j*length/2, height])
-                    sphere(r = radius);
+                translate([i*clamp_offset, j*clamp_length/2, height])
+                    sphere(r = clamp_radius);
         };
 }
 
@@ -228,10 +234,49 @@ module enclosure() {
         clamps();
     };
 }
-//color([0.5,0.5,0.5,0.5]) board();
+
+module lid_top() {
+    translate([0, 0, enclosure_inside_height - height_below_pcb - enclosure_gap_to_pcb])
+        linear_extrude(height = enclosure_thickness)
+            rounded_rectangle_centered(enclosure_radius_outer);
+}
+module lid_clamp_holders() {
+    offset = clamp_offset;
+    tab_width = clamp_radius;
+    for(i=[-1,1])
+        translate([i*(offset - tab_width/2), 0, enclosure_inside_height - height_below_pcb - enclosure_gap_to_pcb])
+            cube([tab_width, clamp_length, 5], center = true);
+}
+module lid_ridge() {
+    translate([0,0,-(height_below_pcb + enclosure_gap_to_pcb - enclosure_inside_height + lid_ridge_step_height)])
+        linear_extrude(height = lid_ridge_step_height + epsilon)
+            rounded_rectangle_centered(enclosure_radius_inner - tolerance);
+}
+
+module lid() {
+    lid_top();
+    clamps();
+    lid_clamp_holders();
+    lid_ridge();
+}
+
+module cut_enclosure() {
+    //color([0.5,0.5,0.5,0.5]) board();
+    difference() {
+        /*color([0.5,0.5,0,0.5])*/ enclosure();
+        translate([-30, -30, enclosure_inside_height - enclosure_inside_height_down - epsilon /*- 14*/]) cube(100); // Cut off top
+    }
+}
+
+module everything() {
+//cut_enclosure();
+
+//translate([0, 0, lid_display_offset])
+    lid();
+}
+
 difference() {
-/*color([0.5,0.5,0,0.5])*/ enclosure();
-//translate([0,-30,-10]) cube([100,100,100]); // Cut off side
-translate([-30, -30, enclosure_inside_height - enclosure_inside_height_down - epsilon /*- 14*/]) cube(100); // Cut off top
-//translate([-30,-gps_length/2,-30]) cube([100,100,100]); // Only leave ports
+    everything();
+    //translate([0,-30,-10]) cube([100,100,100]); // Cut off side
+    //translate([-30,0,-10]) cube([50,50,50]); // Cut off other side
 }
