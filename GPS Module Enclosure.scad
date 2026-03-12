@@ -59,9 +59,11 @@ enclosure_inside_height= enclosure_inside_height_up + enclosure_inside_height_do
 clamp_radius = 1;
 clamp_offset = center_hole_width / 2 + enclosure_radius_inner - clamp_radius / 2;
 clamp_length = 5;
+clamp_height = 14;
 
 lid_display_offset=50;
-lid_ridge_step_height = 1;
+lid_ridge_step_height = 2;
+lid_clamp_offset = 0.2*clamp_radius;
 
 
 
@@ -213,11 +215,10 @@ module studs_inner() {
 }
 
 module clamps() {
-    height = 14;
     for(i=[-1,1])
         hull() {
             for(j=[-1,1])
-                translate([i*clamp_offset, j*clamp_length/2, height])
+                translate([i*clamp_offset, j*clamp_length/2, clamp_height])
                     sphere(r = clamp_radius);
         };
 }
@@ -244,7 +245,7 @@ module lid_clamp_holders() {
     offset = clamp_offset;
     tab_width = clamp_radius;
     for(i=[-1,1])
-        translate([i*(offset - tab_width/2), 0, enclosure_inside_height - height_below_pcb - enclosure_gap_to_pcb])
+        translate([i*(offset - tab_width/2 - lid_clamp_offset), 0, enclosure_inside_height - height_below_pcb - enclosure_gap_to_pcb])
             cube([tab_width, clamp_length, 5], center = true);
 }
 module lid_ridge() {
@@ -253,9 +254,17 @@ module lid_ridge() {
             rounded_rectangle_centered(enclosure_radius_inner - tolerance);
 }
 
+module lid_clamps() {
+    for(i=[-1,1])
+        hull() {
+            for(j=[-1,1])
+                translate([i*clamp_offset-lid_clamp_offset, j*clamp_length/2, clamp_height])
+                    sphere(r = clamp_radius);
+        };
+}
 module lid() {
     lid_top();
-    clamps();
+    lid_clamps();
     lid_clamp_holders();
     lid_ridge();
 }
