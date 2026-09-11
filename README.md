@@ -1,3 +1,6 @@
+[SPDX-FileCopyrightText: 2026 Luflosi <UM980-GNSS-Module-Enclosure@luflosi.de>]::
+[SPDX-License-Identifier: GPL-3.0-only]::
+
 # UM980 GNSS Module Enclosure
 
 ## A small 3D printed enclosure for a UM980 module.

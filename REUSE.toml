@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Luflosi <UM980-GNSS-Module-Enclosure@luflosi.de>
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+SPDX-PackageName = "UM980-GNSS-Module-Enclosure"
+SPDX-PackageSupplier = "Luflosi <UM980-GNSS-Module-Enclosure@luflosi.de>"
+SPDX-PackageDownloadLocation = "https://github.com/Luflosi/UM980-GNSS-Module-Enclosure"

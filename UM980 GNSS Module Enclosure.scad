@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Luflosi <UM980-GNSS-Module-Enclosure@luflosi.de>
+// SPDX-License-Identifier: GPL-3.0-only
+
 $fn = 100;
 
 epsilon = 0.05; // used for CSG subtraction/addition
