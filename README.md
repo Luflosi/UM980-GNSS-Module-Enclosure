@@ -1,9 +1,12 @@
 [SPDX-FileCopyrightText: 2026 Luflosi <UM980-GNSS-Module-Enclosure@luflosi.de>]::
 [SPDX-License-Identifier: GPL-3.0-only]::
 
-# UM980 GNSS Module Enclosure
+# Enclosure for Unicore UM980 GNSS Module
 
-## A small 3D printed enclosure for a UM980 module.
+## A small 3D printed enclosure for a Unicore UM980 module.
+
+I bought this module on AliExpress.
+It came with headers, which I unsoldered.
 
 This design is not perfect (yet? Contributions welcome).
 
