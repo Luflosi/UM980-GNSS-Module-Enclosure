@@ -24,3 +24,7 @@ Possible improvements:
 - Add CI
   - Check code validity
   - Check license information
+
+
+## License
+The license is the GNU GPLv3 (GPL-3.0-only).
