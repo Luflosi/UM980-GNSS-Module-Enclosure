@@ -272,11 +272,15 @@ module cut_enclosure() {
 	}
 }
 
+enable_lid = true;
+enable_enclosure = true;
 module everything() {
-	//cut_enclosure();
+	if (enable_enclosure)
+		cut_enclosure();
 
-	//translate([0, 0, lid_display_offset])
-	lid();
+	if (enable_lid)
+		translate([0, 0, lid_display_offset])
+			lid();
 }
 
 difference() {
