@@ -16,7 +16,7 @@ Flaws of the design:
 - The antenna hole is slightly too close to the USB port, causing the two connectors to touch when the antenna connector is rotated in a certain way
 - The antenna hole has a hex cutout, which is supposed to catch a part of the antenna connector and prevent it from rotating but it is too small and way too shallow
 - The hole for the threaded insert only has two layers of plastic between the threaded insert and the bottom
-- One of the standoffs has a square cutout to make room for the antenna connector on the PCB (a thrugh-hole component). The square cutout is too small
+- One of the standoffs has a square cutout to make room for the antenna connector on the PCB (a through-hole component). The square cutout is too small
 
 Possible improvements:
 
