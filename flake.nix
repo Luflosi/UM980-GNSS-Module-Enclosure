@@ -37,9 +37,9 @@
                 nativeBuildInputs = with pkgs; [ openscad-unstable ];
               }
               ''
-                echo "$src"
+                set -x
                 mkdir "$out"
-                openscad -D enable_lid=false -q -o "$out/enclosure.stl" "$src"
+                openscad -D enable_lid=false -o "$out/enclosure.stl" "$src"
               '';
 
           top-stl =
@@ -49,9 +49,9 @@
                 nativeBuildInputs = with pkgs; [ openscad-unstable ];
               }
               ''
-                echo "$src"
+                set -x
                 mkdir "$out"
-                openscad -D enable_enclosure=false -q -o "$out/top.stl" "$src"
+                openscad -D enable_enclosure=false -o "$out/top.stl" "$src"
               '';
 
           default = pkgs.symlinkJoin {
