@@ -22,11 +22,7 @@ Possible improvements:
 
 - Fix all flaws above
 - Add pictures
-- Upload .stl file somewhere (e.g. GitHub releases and Thingiverse)
-- Create a Git tag with a version number (v0.1?)
-- Add CI
-  - Check code validity
-  - Check license information
+- Upload .stl file somewhere (e.g. Thingiverse)
 
 
 ## License
