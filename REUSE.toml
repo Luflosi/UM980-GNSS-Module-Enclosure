@@ -11,3 +11,9 @@ path = ["**.lock"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Luflosi <UM980-GNSS-Module-Enclosure@luflosi.de>"
 SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["**.avif"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Luflosi <UM980-GNSS-Module-Enclosure@luflosi.de>"
+SPDX-License-Identifier = "GPL-3.0-only"

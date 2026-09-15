@@ -5,6 +5,9 @@
 
 ## A small 3D printed enclosure for a Unicore UM980 module.
 
+![Front view of the enclosure](Picture%20front.avif)
+![Top view of the enclosure](Picture%20top.avif)
+
 I bought this module on AliExpress.
 It came with headers, which I unsoldered.
 
@@ -21,7 +24,6 @@ Flaws of the design:
 Possible improvements:
 
 - Fix all flaws above
-- Add pictures
 - Upload .stl file somewhere (e.g. Thingiverse)
 
 
