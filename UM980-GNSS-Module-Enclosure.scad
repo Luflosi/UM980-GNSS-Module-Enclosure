@@ -155,7 +155,7 @@ module antenna_hole() {
 			antenna_hex_hole();
 	}
 }
-// m3 short stud
+// m3 short stud, modified from https://www.thingiverse.com/thing:5849866
 module stud_outer(x, y, off = -4.63) {
 	maxid = 5.59; //Maximum Insert Diameter
 	ted = 5.16; //Tapered End Diameter
