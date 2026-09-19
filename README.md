@@ -5,6 +5,8 @@
 
 ## A small 3D printed enclosure for a Unicore UM980 module.
 
+[Model on Printables.com](https://www.printables.com/model/1845424-um980-gnss-module-enclosure)
+
 ![Front view of the enclosure](Picture%20front.avif)
 ![Top view of the enclosure](Picture%20top.avif)
 
@@ -24,7 +26,6 @@ Flaws of the design:
 Possible improvements:
 
 - Fix all flaws above
-- Upload .stl file somewhere (e.g. Thingiverse)
 
 
 ## License
