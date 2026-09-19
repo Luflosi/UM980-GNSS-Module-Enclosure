@@ -23,10 +23,6 @@ Flaws of the design:
 - The hole for the threaded insert only has two layers of plastic between the threaded insert and the bottom
 - One of the standoffs has a square cutout to make room for the antenna connector on the PCB (a through-hole component). The square cutout is too small
 
-Possible improvements:
-
-- Fix all flaws above
-
 
 ## License
 The license is the GNU GPLv3 (GPL-3.0-only).
